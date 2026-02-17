@@ -9,17 +9,26 @@ const Login = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const res = await api.post('/auth/login', formData);
-            localStorage.setItem('token', res.data.data.token);
-            localStorage.setItem('user', JSON.stringify(res.data.data));
-            toast.success('Login Successful');
+    e.preventDefault();
+    try {
+        const res = await api.post('/auth/login', formData);
+        localStorage.setItem('token', res.data.data.token);
+        // Note: Backend response structure check kar lena (res.data.data)
+        localStorage.setItem('user', JSON.stringify(res.data.data)); 
+        
+        toast.success('Login Successful');
+        
+        // YAHAN CHANGE KIYA HAI: Role check karke redirect karo
+        if (res.data.data.role === 'admin') {
+            navigate('/admin');
+        } else {
             navigate('/dashboard');
-        } catch (err) {
-            toast.error(err.response?.data?.message || 'Login failed');
         }
-    };
+
+    } catch (err) {
+        toast.error(err.response?.data?.message || 'Login failed');
+    }
+};
 
     return (
         <div className="flex h-screen items-center justify-center bg-gray-100">
