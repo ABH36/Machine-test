@@ -23,13 +23,15 @@ api.interceptors.response.use(
     (error) => {
         // Check if error is 401 (Unauthorized)
         if (error.response && error.response.status === 401) {
-            // Clear local storage
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
             
-            // Redirect to login page
-            // Using window.location ensures a full refresh and clears state
-            window.location.href = '/login';
+            // CRITICAL FIX: Don't redirect if we are already on the login page
+            // This allows the Login component to handle "Invalid Credentials" errors 
+            // and show a Toast message instead of reloading the page.
+            if (window.location.pathname !== '/login') {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = '/login';
+            }
         }
         return Promise.reject(error);
     }

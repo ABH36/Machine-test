@@ -44,7 +44,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
                 name: updatedUser.name,
                 email: updatedUser.email,
                 role: updatedUser.role,
-                token: req.headers.authorization.split(' ')[1]
+                // Optional: Return token again if you implement refresh tokens
             }
         });
     } else {
@@ -57,7 +57,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 // @route   GET /api/users
 // @access  Private/Admin
 const getUsers = asyncHandler(async (req, res) => {
-    const users = await User.find({});
+    const users = await User.find({}).select('-password'); // Exclude passwords
     res.json({
         success: true,
         data: users

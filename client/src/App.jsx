@@ -9,6 +9,10 @@ import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Admin from './pages/Admin';
 import NotFound from './pages/NotFound';
+import VendorDashboard from './pages/VendorDashboard';
+import Products from './pages/Products';
+import ProductDetails from './pages/ProductDetails';
+import Wishlist from './pages/Wishlist'; // NEW: Add this page next
 
 // Components
 import ProtectedRoute from './components/ProtectedRoute';
@@ -21,24 +25,30 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         
-        {/* User Protected Routes (Must be logged in) */}
+        {/* Market Home */}
+        <Route path="/products" element={<Products />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/" element={<Navigate to="/products" replace />} />
+        
+        {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
-           {/* Redirect root to dashboard */}
-           <Route path="/" element={<Navigate to="/dashboard" replace />} />
            <Route path="/dashboard" element={<Dashboard />} />
            <Route path="/profile" element={<Profile />} />
+           <Route path="/wishlist" element={<Wishlist />} />
         </Route>
 
-        {/* Admin Protected Routes (Must be Admin) */}
+        {/* Role Specific Protection */}
+        <Route element={<ProtectedRoute vendorOnly={true} />}>
+            <Route path="/vendor" element={<VendorDashboard />} />
+        </Route>
+
         <Route element={<ProtectedRoute adminOnly={true} />}>
             <Route path="/admin" element={<Admin />} />
         </Route>
 
-        {/* 404 Catch-All Route (Must be last) */}
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      {/* Global Toast Notifications */}
       <ToastContainer position="top-right" autoClose={3000} />
     </Router>
   );

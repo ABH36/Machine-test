@@ -4,22 +4,33 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const { errorHandler } = require('./middleware/errorMiddleware');
 
+// Config
 dotenv.config();
 connectDB();
 
 const app = express();
 
+// Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: process.env.CLIENT_URL || '*', 
+    credentials: true
+}));
 
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/products', require('./routes/productRoutes'));
+app.use('/api/orders', require('./routes/orderRoutes'));
+app.use('/api/upload', require('./routes/uploadRoute'));
+
 
 // Health Check
-app.get('/api/health', (req, res) => res.json({ success: true, message: 'Server is healthy' }));
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ success: true, message: 'Server is healthy' });
+});
 
-// Error Handler
+// Global Error Handler (Must be last)
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
