@@ -90,5 +90,5 @@ module.exports = {
     addOrderItems, 
     getMyOrders, 
     getVendorOrders,
-    updateOrderStatus // Exported for the routes
+    updateOrderStatus 
 };

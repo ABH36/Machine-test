@@ -3,7 +3,7 @@ const User = require('../models/User');
 const Product = require('../models/Product');
 const Order = require('../models/Order');
 
-// @desc    Get Global Analytics for Admin
+
 const getAdminStats = asyncHandler(async (req, res) => {
     const users = await User.find({}).select('-password');
     const products = await Product.find({}).populate('vendor', 'name email');
